@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.weatherincuties.data.WeatherModel
+import com.example.weatherincuties.scrrens.DialogSearch
 import com.example.weatherincuties.scrrens.MainCard
 import com.example.weatherincuties.scrrens.TabLayout
 import com.example.weatherincuties.ui.theme.WeatherInCutiesTheme
@@ -27,6 +28,10 @@ class MainActivity : ComponentActivity() {
                     mutableStateOf(listOf<WeatherModel>())
                 }
 
+                val dialogState = remember { // состоние для AlertDialog(показываем или нет, false - не показываем)
+                    mutableStateOf(false)
+                }
+
                 val currentDay = remember { //состояние для основной карточки (MainCard)
                     mutableStateOf(WeatherModel(
                         "",
@@ -39,8 +44,13 @@ class MainActivity : ComponentActivity() {
                         "",
                     ))
                 }
+                if(dialogState.value){
+                    DialogSearch(dialogState, onSubmit = {
+                        GetData(it, this, daysList, currentDay)
+                    })
+                }
 
-                GetData("London", this, daysList, currentDay)
+                GetData("Moscow", this, daysList, currentDay)
                 Image(
                     painter = painterResource(id = R.drawable.fon),
                     contentDescription = "im1",
@@ -48,7 +58,12 @@ class MainActivity : ComponentActivity() {
                     contentScale = ContentScale.FillBounds
                 )
                 Column {
-                    MainCard(currentDay)
+                    MainCard(currentDay, onClickSync = {
+                        GetData("Moscow", this@MainActivity, daysList, currentDay) //передаем в mainScreen, чтобы можно было снова запустить запрос к серверу
+                    },
+                        onClickSearch = {
+                            dialogState.value = true
+                        })
                     TabLayout(daysList, currentDay)
                 }
 

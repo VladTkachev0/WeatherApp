@@ -35,7 +35,7 @@ import com.example.weatherincuties.ui.theme.BlueLite
 
 
 @Composable
-fun MainCard(currentDay: MutableState<WeatherModel>) {
+fun MainCard(currentDay: MutableState<WeatherModel>, onClickSync: () -> Unit, onClickSearch: () -> Unit) { //onClickSync: () -> Unit передаем функцию  в MainCard
 
     Column(
         modifier = Modifier
@@ -104,7 +104,9 @@ fun MainCard(currentDay: MutableState<WeatherModel>) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        IconButton(onClick = { }) {
+                        IconButton(onClick = { //кнопка для поиска города
+                            onClickSearch.invoke()
+                        }) {
                             Icon(painter = painterResource(id = R.drawable.ic_search),
                                 contentDescription = "im3",
                                 tint = Color.White)
@@ -117,7 +119,9 @@ fun MainCard(currentDay: MutableState<WeatherModel>) {
                             color = Color.White
                         )
 
-                        IconButton(onClick = { }) {
+                        IconButton(onClick = { //кнопка для синхронизации(заново сдлеать запрос к серверу)
+                            onClickSync.invoke() // вызываем функцию для запроса к бд
+                        }) {
                             Icon(painter = painterResource(id = R.drawable.ic_sync),
                                 contentDescription = "im4",
                                 tint = Color.White

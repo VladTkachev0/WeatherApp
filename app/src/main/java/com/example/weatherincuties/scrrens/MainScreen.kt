@@ -30,13 +30,14 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.weatherincuties.R
 import com.example.weatherincuties.data.WeatherModel
-import com.example.weatherincuties.getWeatherByHours
+import com.example.weatherincuties.data.getWeatherByHours
 import com.example.weatherincuties.ui.theme.BlueLite
 
 
 @Composable
 fun MainCard(currentDay: MutableState<WeatherModel>, onClickSync: () -> Unit, onClickSearch: () -> Unit) { //onClickSync: () -> Unit передаем функцию  в MainCard
-
+// onClickSync запускает новый запрос к серверу, чтобы обновить данные
+// onClickSearch запускает поиск города, в котором нужно показать прогноз погоды
     Column(
         modifier = Modifier
             .padding(5.dp)
@@ -120,7 +121,7 @@ fun MainCard(currentDay: MutableState<WeatherModel>, onClickSync: () -> Unit, on
                         )
 
                         IconButton(onClick = { //кнопка для синхронизации(заново сдлеать запрос к серверу)
-                            onClickSync.invoke() // вызываем функцию для запроса к бд
+                            onClickSync.invoke() // вызываем функцию для запроса к серверу
                         }) {
                             Icon(painter = painterResource(id = R.drawable.ic_sync),
                                 contentDescription = "im4",

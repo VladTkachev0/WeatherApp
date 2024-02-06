@@ -11,8 +11,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import com.example.weatherincuties.data.getData
 import com.example.weatherincuties.data.WeatherModel
-import com.example.weatherincuties.scrrens.DialogSearch
+
 import com.example.weatherincuties.scrrens.MainCard
 import com.example.weatherincuties.scrrens.TabLayout
 import com.example.weatherincuties.ui.theme.WeatherInCutiesTheme
@@ -32,6 +33,10 @@ class MainActivity : ComponentActivity() {
                     mutableStateOf(false)
                 }
 
+                val selectedCity = remember { // текущий выбранный город
+                    mutableStateOf("Moscow")
+                }
+
                 val currentDay = remember { //состояние для основной карточки (MainCard)
                     mutableStateOf(WeatherModel(
                         "",
@@ -45,12 +50,13 @@ class MainActivity : ComponentActivity() {
                     ))
                 }
                 if(dialogState.value){
-                    DialogSearch(dialogState, onSubmit = {
-                        GetData(it, this, daysList, currentDay)
+                    DialogSearch(dialogState, onSubmit = { city ->
+                        selectedCity.value = city
+                        getData(city, this, daysList, currentDay)
                     })
                 }
 
-                GetData("Moscow", this, daysList, currentDay)
+                getData("Moscow", this, daysList, currentDay)
                 Image(
                     painter = painterResource(id = R.drawable.fon),
                     contentDescription = "im1",
@@ -59,7 +65,7 @@ class MainActivity : ComponentActivity() {
                 )
                 Column {
                     MainCard(currentDay, onClickSync = {
-                        GetData("Moscow", this@MainActivity, daysList, currentDay) //передаем в mainScreen, чтобы можно было снова запустить запрос к серверу
+                        getData(selectedCity.value, this@MainActivity, daysList, currentDay) //передаем в mainScreen, чтобы можно было снова запустить запрос к серверу
                     },
                         onClickSearch = {
                             dialogState.value = true
